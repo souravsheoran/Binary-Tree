@@ -1,0 +1,145 @@
+class TreeNode {
+    int data;
+    TreeNode left;
+    TreeNode right;
+
+    public TreeNode(int data) {
+        this.data = data;
+        left = null;
+        right = null;
+    }
+}
+
+class BinaryTree {
+    TreeNode root;
+
+    public BinaryTree() {
+        root = null;
+    }
+
+    // Insertion
+    public void insert(int data) {
+        root = insertRec(root, data);
+    }
+
+    private TreeNode insertRec(TreeNode root, int data) {
+        if (root == null) {
+            root = new TreeNode(data);
+            return root;
+        }
+
+        if (data < root.data) {
+            root.left = insertRec(root.left, data);
+        } else if (data > root.data) {
+            root.right = insertRec(root.right, data);
+        }
+
+        return root;
+    }
+
+    // Inorder Traversal
+    public void inorder() {
+        inorderRec(root);
+    }
+
+    private void inorderRec(TreeNode root) {
+        if (root != null) {
+            inorderRec(root.left);
+            System.out.print(root.data + " ");
+            inorderRec(root.right);
+        }
+    }
+
+    // Search
+    public boolean search(int data) {
+        return searchRec(root, data);
+    }
+
+    private boolean searchRec(TreeNode root, int data) {
+        if (root == null) {
+            return false;
+        }
+
+        if (root.data == data) {
+            return true;
+        }
+
+        if (data < root.data) {
+            return searchRec(root.left, data);
+        } else {
+            return searchRec(root.right, data);
+        }
+    }
+
+    // Delete
+    public void delete(int data) {
+        root = deleteRec(root, data);
+    }
+
+    private TreeNode deleteRec(TreeNode root, int data) {
+        if (root == null) {
+            return root;
+        }
+
+        if (data < root.data) {
+            root.left = deleteRec(root.left, data);
+        } else if (data > root.data) {
+            root.right = deleteRec(root.right, data);
+        } else {
+            if (root.left == null) {
+                return root.right;
+            } else if (root.right == null) {
+                return root.left;
+            }
+
+            root.data = minValue(root.right);
+            root.right = deleteRec(root.right, root.data);
+        }
+
+        return root;
+    }
+
+    private int minValue(TreeNode root) {
+        int minValue = root.data;
+        while (root.left != null) {
+            minValue = root.left.data;
+            root = root.left;
+        }
+        return minValue;
+    }
+}
+
+public class BinaryTreeExample {
+    public static void main(String[] args) {
+        BinaryTree tree = new BinaryTree();
+
+        // Insertion
+        tree.insert(50);
+        tree.insert(30);
+        tree.insert(20);
+        tree.insert(40);
+        tree.insert(70);
+        tree.insert(60);
+        tree.insert(80);
+
+        // Inorder Traversal
+        System.out.println("Inorder Traversal:");
+        tree.inorder();
+        System.out.println();
+
+        // Search
+        int searchValue = 60;
+        if (tree.search(searchValue)) {
+            System.out.println(searchValue + " found in the tree.");
+        } else {
+            System.out.println(searchValue + " not found in the tree.");
+        }
+
+        // Delete
+        int deleteValue = 40;
+        tree.delete(deleteValue);
+        System.out.println("Inorder Traversal after deleting " + deleteValue + ":");
+        tree.inorder();
+        System.out.println();
+    }
+}
